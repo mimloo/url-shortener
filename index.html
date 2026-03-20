@@ -719,11 +719,6 @@
 
     if (hasError) return showError('Please fill in all required fields.');
 
-    const cfg = loadConfig();
-    if (!cfg.apiKey || !cfg.domain) {
-      return showError('Open Settings (⚙) to configure your Short.io API key and domain first.');
-    }
-
     const fullUrl = buildFullUrl();
     const slug = document.getElementById('slug').value.trim();
     const btn = document.getElementById('createBtn');
@@ -734,7 +729,7 @@
     try {
       const body = {
         originalURL: fullUrl,
-        domain: cfg.domain,
+        domain: 'share.mimloo.com',
       };
       if (slug) body.path = slug;
 
