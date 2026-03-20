@@ -599,29 +599,6 @@
   </div>
 </div>
 
-<!-- Settings button -->
-<button class="config-btn" onclick="toggleModal()" title="Settings">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-  </svg>
-</button>
-
-<!-- Settings modal -->
-<div class="overlay" id="overlay" onclick="toggleModal()"></div>
-<div class="modal" id="modal">
-  <h3>Settings</h3>
-  <p>Your API key is stored in your browser only — never sent anywhere except Short.io.</p>
-  <div class="field">
-    <label>Short.io API Key</label>
-    <input type="password" id="apiKey" placeholder="pk_xxxxxxxxxxxxxxxx">
-  </div>
-  <div class="field">
-    <label>Short.io Domain</label>
-    <input type="text" id="domain" placeholder="share.mimloo.com">
-  </div>
-  <button class="btn-save" onclick="saveConfig()">Save</button>
-</div>
-
 <script>
   // --- Config ---
   const STORAGE_KEY = 'mimloo_link_builder';
@@ -630,43 +607,6 @@
     try {
       return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
     } catch { return {}; }
-  }
-
-  function saveConfig() {
-    const apiKey = document.getElementById('apiKey').value.trim();
-    const domain = document.getElementById('domain').value.trim();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ apiKey, domain }));
-    if (domain) {
-      document.getElementById('slugPrefix').textContent = domain + '/';
-    }
-    toggleModal();
-    checkSetup();
-  }
-
-  function checkSetup() {
-    const cfg = loadConfig();
-    const banner = document.getElementById('setupBanner');
-    if (!cfg.apiKey || !cfg.domain) {
-      banner.classList.add('visible');
-    } else {
-      banner.classList.remove('visible');
-    }
-  }
-
-  function toggleModal() {
-    const overlay = document.getElementById('overlay');
-    const modal = document.getElementById('modal');
-    const isOpen = modal.classList.contains('open');
-    if (isOpen) {
-      modal.classList.remove('open');
-      overlay.classList.remove('open');
-    } else {
-      const cfg = loadConfig();
-      document.getElementById('apiKey').value = cfg.apiKey || '';
-      document.getElementById('domain').value = cfg.domain || '';
-      overlay.classList.add('open');
-      modal.classList.add('open');
-    }
   }
 
   // --- Custom source/medium toggle ---
@@ -798,12 +738,9 @@
       };
       if (slug) body.path = slug;
 
-      const res = await fetch('https://api.short.io/links', {
+      const res = await fetch('https://mimloo.app.n8n.cloud/webhook/shortener', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': cfg.apiKey,
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
 
@@ -845,16 +782,6 @@
       }, 2000);
     });
   }
-
-  // --- Init ---
-  (function init() {
-    const cfg = loadConfig();
-    if (cfg.domain) {
-      document.getElementById('slugPrefix').textContent = cfg.domain + '/';
-    }
-    checkSetup();
-    updatePreview();
-  })();
 </script>
 </body>
 </html>
