@@ -745,7 +745,8 @@
         throw new Error(data.message || data.error || `API error ${res.status}`);
       }
 
-      const shortUrl = data.shortURL || `https://share.mimloo.com/${data.path}`;
+      const link = Array.isArray(data) ? data[0] : data;
+      const shortUrl = link.shortURL || `https://share.mimloo.com/${link.path}`;
       document.getElementById('shortUrl').value = shortUrl;
       document.getElementById('result').classList.add('visible');
 
