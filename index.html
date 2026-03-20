@@ -745,7 +745,7 @@
         throw new Error(data.message || data.error || `API error ${res.status}`);
       }
 
-      const shortUrl = data.shortURL || `https://${cfg.domain}/${data.path}`;
+      const shortUrl = data.shortURL || `https://share.mimloo.com/${data.path}`;
       document.getElementById('shortUrl').value = shortUrl;
       document.getElementById('result').classList.add('visible');
 
